@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title> Cars </title>
+		<!-- Bootstrap core CSS -->
+		<link href="../lib/bootstrap4/css/bootstrap.css" rel="stylesheet">
+	</head>
+
+	<body>
+		<div clas="container">
+			<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+				<a class="navbar-brand" href="#">Car CRUD</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarCollapse">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item active">
+							<a class="nav-link" href="../index.html">Home <span class="sr-only">(current)</span></a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">Cars</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="views/cars.html">Drivers</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="views/cars.html">Drivers with own cars</a>
+						</li>
+					</ul>
+					<form class="form-inline mt-2 mt-md-0">
+						<input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+						<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+					</form>
+				</div>
+			</nav>
+		</div>
+		<div class="container-fluid" style="margin-top: 8%;">
+			<div class="col-md-12">
+				<h1 class="text-center"> Cars </h1>
+			</div>
+			<div class="col-md-4 offset-1">
+				<div class="btn-group btn-group-md" role="group" aria-label="...">
+				  <button type="button" class="btn btn-success" id="create_button" data-toggle="modal" data-target="#cars-modal">Create</button>
+				  <button type="button" class="btn btn-warning" id="edit_button" data-toggle="modal" data-target="#cars-modal">Edit</button>
+				  <button type="button" class="btn btn-danger" id="delete_button" data-toggle="modal" data-target="#cars-delete-modal">Delete</button>
+				</div>
+			</div>
+
+			<div class="col-md-10 offset-md-1" style="margin-top: 2%;">
+				<table class="table table-bordered table-hover table-striped table-inverse" id="cars-table">
+					<thead class="thead-dark">
+						<th scope="col" class="text-center"> Select </th>
+						<th scope="col" class="text-center"> Name </th>
+						<th scope="col" class="text-center"> Model </th>
+						<th scope="col" class="text-center"> Color </th>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+		</div>
+
+		<div class="modal fade" id="cars-modal" tabindex="-1">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h6 id="modal-title"></h6>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							<span class="sr-only">Close</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form id="cars_form">
+						<fieldset class="form-group">
+								<input type="hidden" class="form-control" id="id" name="id"/>
+							</fieldset>
+							<fieldset class="form-group">
+								<label for="name">Name</label>
+								<input type="text" class="form-control" id="name" name="name" placeholder="Name"/>
+							</fieldset>
+							<fieldset class="form-group">
+								<label for="model">Model</label>
+								<input type="number" class="form-control" id="model" name="model" placeholder="Car Model"/>
+							</fieldset>
+							<fieldset class="form-group">
+								<label for="color">Color</label>
+								<select class="form-control" id="color" name="color">
+							      <option value="red">Red</option>
+							      <optionv value="green">Green</option>
+							      <option>Blue</option>
+							      <option>Yellow</option>
+							      <option>White</option>
+							    </select>
+							</fieldset>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success" id="cars_submit">Save changes</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+		<div class="modal fade" id="cars-delete-modal" tabindex="-1">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h6 id="modal-title"></h6>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							<span class="sr-only">Close</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form id="cars_form">
+							<fieldset class="form-group">
+								<input type="hidden" class="form-control" id="id"/>
+							</fieldset>
+							<h2 class="text-Center">Are you sure to delete this record?</h2>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" id="cars_submit">Confirm</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="../lib/jquery/jquery-3.3.1.min.js"></script>
+		<script src="../lib/bootstrap4/js/bootstrap.min.js"></script>
+		<script>
+			function ajaxCall (url, data) {
+				return $.ajax({
+					url: url,
+					type: 'POST',
+					dataType: 'json',
+					data: data,
+				});
+			}
+			$(document).ready(function($) {
+				// Load Data 
+				$("#cars-table tbody").empty();
+				data = new Array()
+				data.push({name: 'action', value: 'select'});
+				ajaxCall("../class/cars.php", data).done(function(response) {
+						$.each(response, function(index, el) {
+							$("#cars-table tbody").append('<tr><td><input class="text-center" type="checkbox" name="id" value=' + el['id'] + '></td><td>' + el['name'] + '</td><td>' + el['model'] + '</td>><td>' + el['color'] + '</td></tr>');
+						});
+					});
+
+				// Create function
+				$("#create_button").click(function(){
+					$("#modal-title").text("Create Car");
+					$("#cars_form").attr('mode', 'create');
+				});
+				$("#cars-table tbody").on('click', 'tr', function(){
+					$("#cars-table tbody tr").removeClass('table-success');
+					$(this).addClass("table-success");
+				});
+				// Edit Buttons
+				$("#edit_button").click(function(){
+					$("#modal-title").text("Update Car");
+					$("#cars_form").attr('mode', 'update');
+					row_selected = $("#cars-table tbody tr[class='table-success']");
+					$.each(row_selected.children('td'), function(el){
+						debugger;
+						$("#cars_form td[name='id']").val(el.value);
+					});
+					var data = $("#cars_form").serializeArray();
+				});
+				$("#cars_submit").click(function() {
+					$("#cars-table tbody").empty()
+					var data = $("#cars_form").serializeArray();
+					data.push({name: 'action', value: 'create'});
+					ajaxCall("../class/cars.php", data).done(function(response) {
+						$.each(response, function(index, el) {
+							$("#cars-table tbody").append('<tr><td><input class="text-center" type="checkbox" name="id" value=' + el['id'] + '></td><td>' + el['name'] + '</td><td>' + el['model'] + '</td>><td>' + el['color'] + '</td></tr>');
+						});
+					});
+				});
+			});
+		</script>
+	</body>
+</html>
