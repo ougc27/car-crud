@@ -74,20 +74,20 @@
 					</div>
 					<div class="modal-body">
 						<form id="cars_form">
-						<fieldset class="form-group">
-								<input type="hidden" class="form-control" id="id" name="id"/>
+							<fieldset class="form-group">
+								<input type="hidden" class="form-control" id="data-id" name="id"/>
 							</fieldset>
 							<fieldset class="form-group">
 								<label for="name">Name</label>
-								<input type="text" class="form-control" id="name" name="name" placeholder="Name"/>
+								<input type="text" class="form-control" id="data-name" name="name" placeholder="Name"/>
 							</fieldset>
 							<fieldset class="form-group">
 								<label for="model">Model</label>
-								<input type="number" class="form-control" id="model" name="model" placeholder="Car Model"/>
+								<input type="number" class="form-control" id="data-model" name="model" placeholder="Car Model"/>
 							</fieldset>
 							<fieldset class="form-group">
 								<label for="color">Color</label>
-								<select class="form-control" id="color" name="color">
+								<select class="form-control" id="data-color" name="color">
 							      <option value="red">Red</option>
 							      <optionv value="green">Green</option>
 							      <option>Blue</option>
@@ -124,7 +124,7 @@
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-danger" id="cars_submit">Confirm</button>
+						<button type="button" class="btn btn-danger" id="car_delelete">Confirm</button>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 					</div>
 				</div><!-- /.modal-content -->
@@ -153,7 +153,7 @@
 				data.push({name: 'action', value: 'select'});
 				ajaxCall("../class/cars.php", data).done(function(response) {
 						$.each(response, function(index, el) {
-							$("#cars-table tbody").append('<tr><td><input class="text-center" type="checkbox" name="id" value=' + el['id'] + '></td><td>' + el['name'] + '</td><td>' + el['model'] + '</td>><td>' + el['color'] + '</td></tr>');
+							$("#cars-table tbody").append('<tr><td data-id=' + el['id'] + ' name="id">' + el['id'] + '</td><td data-name=' + el['name'] + ' name="name">' + el['name'] + '</td><td data-model=' + el['model'] + ' name="model">' + el['model'] + '</td>><td data-color=' + el['color'] + ' name="color">' + el['color'] + '</td></tr>');
 						});
 					});
 
@@ -171,19 +171,33 @@
 					$("#modal-title").text("Update Car");
 					$("#cars_form").attr('mode', 'update');
 					row_selected = $("#cars-table tbody tr[class='table-success']");
-					$.each(row_selected.children('td'), function(el){
-						debugger;
-						$("#cars_form td[name='id']").val(el.value);
+					$.each(row_selected.children('td'), function(index, el){
+						$("#cars_form input[id=data-"+ el.getAttribute('name') +"]").val(el.innerText);
 					});
-					var data = $("#cars_form").serializeArray();
+					$("#cars_form").attr('mode', 'update');
 				});
 				$("#cars_submit").click(function() {
 					$("#cars-table tbody").empty()
 					var data = $("#cars_form").serializeArray();
-					data.push({name: 'action', value: 'create'});
+					debugger;
+					data.push({name: 'action', value: $("#cars_form").attr('mode')});
 					ajaxCall("../class/cars.php", data).done(function(response) {
 						$.each(response, function(index, el) {
-							$("#cars-table tbody").append('<tr><td><input class="text-center" type="checkbox" name="id" value=' + el['id'] + '></td><td>' + el['name'] + '</td><td>' + el['model'] + '</td>><td>' + el['color'] + '</td></tr>');
+							$("#cars-table tbody").append('<tr><td data-id=' + el['id'] + ' name="id">' + el['id'] + '</td><td data-name=' + el['name'] + ' name="name">' + el['name'] + '</td><td data-model=' + el['model'] + ' name="model">' + el['model'] + '</td>><td data-color=' + el['color'] + ' name="color">' + el['color'] + '</td></tr>');
+						});
+					});
+				});
+				$("#car_delelete").click(function() {
+					row_selected = $("#cars-table tbody tr[class='table-success']");
+					var id = row_selected.find('[name="id"]')[0].el.getAttribute('data-id')
+					data.push({
+						name: 'action', value: 'delete',
+						name: 'id', value: parseInt(id),
+					});
+					$("#cars-table tbody").empty()
+					ajaxCall("../class/cars.php", data).done(function(response) {
+						$.each(response, function(index, el) {
+							$("#cars-table tbody").append('<tr><td data-id=' + el['id'] + ' name="id">' + el['id'] + '</td><td data-name=' + el['name'] + ' name="name">' + el['name'] + '</td><td data-model=' + el['model'] + ' name="model">' + el['model'] + '</td>><td data-color=' + el['color'] + ' name="color">' + el['color'] + '</td></tr>');
 						});
 					});
 				});

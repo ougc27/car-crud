@@ -18,9 +18,9 @@
 			break;
 				
             case "update": 
-				$db->actualizar(
+				$db->executeQuery(
 					"UPDATE car
-					 SET name = '$name', name = '$model', color = '$color'
+					 SET name = '$name', model = '$model', color = '$color'
 					 WHERE id = '$id'");
 				
 				$data = $db->select("SELECT * FROM car");
@@ -28,7 +28,7 @@
             break;
 				
 			case "delete": 
-				$db->eliminar("DELETE FROM car WHERE od = '$id'");
+				$db->executeQuery("DELETE FROM car WHERE od = '$id'");
 				$data = $db->select("SELECT * FROM car");
         		echo json_encode($data);
 			break;
